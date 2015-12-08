@@ -1,1 +1,0 @@
-Dump the property files in here, yo. This folder is ignored.
