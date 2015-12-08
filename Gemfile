@@ -4,3 +4,5 @@ source 'https://rubygems.org'
 
 gem 'roo'
 gem 'geocoder'
+gem 'fastercsv'
+gem 'chardet'
