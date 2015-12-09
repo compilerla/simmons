@@ -6,6 +6,11 @@ output = []
 errors = []
 CSV.foreach("../data/raw/#{file_name}", { :headers=>:first_row }) do |row|
   begin
+    if $. == 1
+      output << row
+      next
+    end
+
     addy = row[2]
     puts "Geocoding #{addy}"
     geo_response = Geocoder.search(addy).first
@@ -28,4 +33,8 @@ CSV.open("../data/compiled/#{file_name}", "wb") do |csv|
   end
 end
 
-puts "Errors: #{errors}"
+CSV.open("../data/errors.csv", "ab") do |csv|
+  errors.each do |error|
+    csv << [error[:addy], '', '']
+  end
+end

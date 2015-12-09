@@ -29,4 +29,8 @@ CSV.open("../data/compiled/#{file_name}", "wb") do |csv|
   end
 end
 
-puts "Errors: #{errors}"
+CSV.open("../data/errors.csv", "ab") do |csv|
+  errors.each do |error|
+    csv << [error[:addy], '', '']
+  end
+end
