@@ -1,12 +1,36 @@
 require 'csv'
 require 'geocoder'
 
-Geocoder.configure({ lookup: :bing, api_key: 'AlbI0WuLiDki71fvZ762U_h7xAkWZcM70eHEBH5Y5inZ_g-svwYef5b_jsgnMICa', timeout: 10})
+Geocoder.configure({ lookup: :bing, api_key: 'AnoRWFu0Bv0UJChVOM5Lg02NB5xKgQTeRJjF0AzYny3hu5WkZw8WA303TDS5MCQj', timeout: 10})
 
 class AddressCompiler
   def self.compile_addresses
-    AddressCompiler.new('../data/raw/2015 Registered Foreclosed Properties.csv',
-                        ['Address', 'Zip Code']).compile!
+    #AddressCompiler.new('../data/raw/2015 Registered Foreclosed Properties.csv',
+    #                    ['Address', 'Zip Code']).compile!
+    #AddressCompiler.new('../data/raw/Brownfields Program - Sanitation Department.csv',
+    #                    ['Street Address']).compile!
+    #AddressCompiler.new('../data/raw/Building Book - GSD - 4468 FY 2014_by_building_book_number.csv',
+    #                    ['Street #','Street Dir','Street Name','Street Type','Bldg Name','Community', 'Zip Code']).compile!
+    #AddressCompiler.new('../data/raw/Building Book - GSD - 4468 FY 2014_listed_by_address.csv',
+    #                    ['Street #','Street Dir','Street Name','Street Type','Bldg Name','Community', 'Zip Code']).compile!
+    #AddressCompiler.new('../data/raw/CRA Option Properties .csv',
+    #                    ['Address']).compile!
+    #AddressCompiler.new('../data/raw/CRA Property List Oct 2012.csv',
+    #                    ['Address', 'Address2']).compile!
+    #AddressCompiler.new('../data/raw/City Owned Within CDs.csv',
+    #                    ['ADDRESS']).compile!
+    #AddressCompiler.new('../data/raw/Decommissioned Fire Stations.csv',
+    #                    ['LOCATION']).compile!
+    AddressCompiler.new('../data/raw/GSD\ Facilities\ \ For\ Filming.csv',
+                        ['Address']).compile!
+    AddressCompiler.new('../data/raw/Insured Buildings & Uninsured Buildings -CAO - 359.csv',
+                        ['Address','City','State','Zip']).compile!
+    AddressCompiler.new('../data/raw/Leased properties to NPOs - GSD - 110 - FY 2014.csv',
+                        ['Address']).compile!
+    AddressCompiler.new('../data/raw/MICLA Assets.csv',
+                        ['Asset Securing Lease']).compile!
+    AddressCompiler.new('../data/raw/iMICLA Commercial Paper Note Program.csv',
+                        ['ADDRESS']).compile!
   end
 
   def initialize(path_to_file, address_columns = [])
@@ -27,7 +51,7 @@ class AddressCompiler
         out_row = headers.map { |column| row[column] }
         @out_csv << out_row.map(&:to_s).map(&:chomp) # remove new line chars
         puts "Processed #{@process_count} of #{@total_lines} with #{@error_count} errors" if @process_count % 50 == 0
-        sleep(0.1) #geocoding rate limit
+        sleep(3) #geocoding rate limit
       rescue NoMethodError #nil geocoder
         @error_count += 1
         @errors_csv << headers.map { |column| row[column] }

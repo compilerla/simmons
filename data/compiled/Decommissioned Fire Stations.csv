@@ -1,0 +1,15 @@
+Fire Station No.,Council District,APN,LOCATION,STATUS (AS PER GSD/MUNICIPAL FACILITIES/SURPLUS PROPERTY),Latitude,Longitude,compiled_address,compiled_lat,compiled_lng
+83,5,2258-016-901,"5001 Balboa Blvd., Encino, CA","Unavailable, Armenian community center (long-term lease)",34.1618277,-118.5011443,"5001 Balboa Blvd, Los Angeles, CA 91316",34.161827713251114,-118.50114427506924
+77,6,2408-006-900,"8943 Glenoaks Blvd., Sun Valley, CA","Unavailable, LAFD ACS (Auxiliary Communications Services) program",37.9847984,-122.548584,"Sun Valley, CA",37.984798431396484,-122.548583984375
+65,15,6048-012-931,"1525 East 103rd  St., Watts, CA","Unavailable, CD-15 community center/LAPD service center",33.9432988,-118.2473215,"1525 E 103rd St, Los Angeles, CA 90002",33.94329875707626,-118.24732147157192
+62,11,4246-008-900,"3631 Centinela Ave., Mar Vista, CA",Available,34.0073995,-118.436436,"3631 S Centinela Ave, Los Angeles, CA 90066",34.007399529218674,-118.43643598258495
+5,11,4112-029-900,"6621 W. Manchester, Westchester,  CA",Available,33.9601402,-118.4051666,"6621 W Manchester Ave, Los Angeles, CA 90045",33.96014,-118.405166
+43,5,4314-023-900,"10234 National Blvd., Palms",Unavailable (sold to private developer),34.0290389,-118.4080783,"10234 National Blvd, Los Angeles, CA 90034",34.02903892099857,-118.408078327775
+84,3,2167-002-900,"5340 Canoga Ave., Woodland Hills, CA","Unavailable, now public park",34.1670674,-118.5974202,"5340 Canoga Ave, Los Angeles, CA 91364",34.16706740856171,-118.59742015600204
+87,12,2694-001-900,"10241 Balboa Blvd., Granada Hills, CA","Unavailable, building demolished, new construction in place",34.2568476,-118.5023928,"10241 Balboa Blvd, Los Angeles, CA 91325",34.2568476498127,-118.50239284336567
+13,1,5076-019-900,"1206 S. Vermont Ave., Pico Heights, CA",Available,38.7349854,-120.7907257,"E Pino Heights, CA",38.7349853515625,-120.79072570800781
+78,2,2375-021-900,"4230 Coldwater Canyon, Studio City",Available,34.1458625,-118.4137257,"4230 Coldwater Canyon Ave, Los Angeles, CA 91604",34.14586253464222,-118.41372571885586
+4,14,5409-015-901,"800 N. Main St., Los Angeles, CA","Unavailable, demolished (LA Conversancy)",34.0605965,-118.2353592,"800 N Main St, Los Angeles, CA 90012",34.06059646606445,-118.23535919189453
+7,"","",14123 Nordhoff Street Arleta,"Available (decommissioned June, 2015)",34.2419014,-118.4260025,"Arleta, CA",34.24190139770508,-118.4260025024414
+15,"","","915 W Jefferson Street, Los Angeles, CA","Unavailable; decommissioned July, 2015 (moved; privately owned by USC Geffen Film Institute)",34.0246857,-118.2859084,"915 W Jefferson Blvd, Los Angeles, CA 90007",34.0246856957674,-118.28590840101242
+53,15,"","430 N Mesa St., San Pedro, CA",Unavailable; Cultural Affairs center,33.7463676,-118.2856583,"430 N Mesa St, Los Angeles, CA 90731",33.74636761844158,-118.28565828502178
