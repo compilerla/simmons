@@ -57,8 +57,8 @@ class Merger
   end
 end
 
-# Merger.merge_file("2015 Registered Foreclosed Properties.csv", 'APN', 'Property Address', true)
-Merger.merge_file("Assumed outside LA City Limits.csv", 'AIN', 'PropertyLocation', true)
+Merger.merge_file("2015 Registered Foreclosed Properties.csv", 'APN', 'Property Address', true)
+Merger.merge_file("Assumed outside LA City Limits.csv", 'AIN', 'PropertyLocation')
 Merger.merge_file("Brownfields Program - Sanitation Department.csv", 'APN', 'Address')
 Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
 Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
