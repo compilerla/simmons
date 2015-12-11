@@ -250,13 +250,12 @@ out_csv.close
 
 
 
-# !!!!!!!!!! NEED TO FIX THIS ONE!!!!!!!!
 file_name = "Recreation and Parks - Provided by Department.csv"
 
 in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
 out_csv = CSV.open("../data/master_with_dups.csv", "ab")
 in_csv.each do |row|
-  out_csv << [file_name, '', "#{row['Property Address']}, #{row['City']}, #{row['Zip Code']}", '']
+  out_csv << [file_name, row["APN"], row['Address'], '']
 end
 
 in_csv.close
@@ -277,7 +276,6 @@ out_csv.close
 
 
 
-# !!!!!!!!!! NEED TO FIX THIS ONE!!!!!!!! (malformed csv)
 file_name = "Reported Nuisance Properties FYs 14-16__15-16_sheet.csv"
 
 in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
@@ -291,28 +289,28 @@ out_csv.close
 
 
 
-# file_name = "Residential Leases - GSD - 11 total - FY 2013.csv"
+file_name = "Residential Leases - GSD - 11 total - FY 2013.csv"
 
-# in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
-# out_csv = CSV.open("../data/master_with_dups.csv", "ab")
-# in_csv.each do |row|
-#   out_csv << [file_name, '', "#{row['ADDRESS']}, #{row['ADDRESS_2']}", '']
-# end
+in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
+out_csv = CSV.open("../data/master_with_dups.csv", "ab")
+in_csv.each do |row|
+  out_csv << [file_name, '', "#{row['ADDRESS']}, #{row['ADDRESS_2']}", '']
+end
 
-# in_csv.close
-# out_csv.close
+in_csv.close
+out_csv.close
 
 
 
-# file_name = "undeclared surplus property by id.csv"
+file_name = "undeclared surplus property by id.csv"
 
-# in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
-# out_csv = CSV.open("../data/master_with_dups.csv", "ab")
-# in_csv.each do |row|
-#   out_csv << [file_name, row['APN'], row['ADDRESS'], '']
-# end
+in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
+out_csv = CSV.open("../data/master_with_dups.csv", "ab")
+in_csv.each do |row|
+  out_csv << [file_name, row['APN'], row['ADDRESS'], '']
+end
 
-# in_csv.close
-# out_csv.close
+in_csv.close
+out_csv.close
 
 
