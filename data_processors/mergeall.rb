@@ -1,5 +1,7 @@
 require 'csv'
 require 'rest-client'
+require 'georuby'
+require 'geocoder'
 
 class Housekeeping
   def self.clean_apn(apn)
@@ -31,7 +33,7 @@ class Merger
     in_csv = CSV.open("../data/raw/#{file_name}", { headers: true })
     out_csv = CSV.open("../data/master_with_dups.csv", open_mode)
     if new_file
-      out_csv << ['File name', 'APN given', 'Address given', 'Address from APN']
+      out_csv << ['File name', 'APN given', 'Address given', 'Address from APN', 'Shape coords from APN', 'Latlng from address given']
     end
     in_csv.each do |row|
       cleaned_rows = generate_cleaned_rows(row, file_name, apn_col, address_col)
@@ -52,8 +54,24 @@ class Merger
 
     apns_cleaned = [apns_cleaned] if !apns_cleaned.kind_of?(Array)      
     apns_cleaned.map do |clean_apn|
-      [file_name, clean_apn, address, self.address_from_apn(clean_apn)]
+      [file_name, clean_apn, address, self.address_from_apn(clean_apn), self.shape_from_apn(clean_apn), self.latlng_for_address(address)]
     end
+  end
+
+  def self.latlng_for_address(address)
+    return nil unless address && address.length > 0
+
+    geo_response = Geocoder.search(address).first
+    if geo_response.nil?
+      log_error("Couldn't geocode address: #{address}")
+      return
+    end
+
+    geo_response.coordinates
+  end
+
+  def self.log_error(error)
+    # TODO
   end
 
   def self.address_from_apn(apn)
@@ -79,6 +97,25 @@ class Merger
     address_from_apn
   end
 
+  def self.shape_from_apn(apn)
+    return '' unless apn && apn.length > 0
+
+    shape_from_apn = nil
+    puts "Checking shape for apn: #{apn}"
+    begin
+      request = RestClient.get("http://maps.lacity.org/lahub/rest/services/Landbase_Information/MapServer/5/query?where=BPP%3D%27#{apn}%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=json")
+      parsed = JSON.parse(request)
+      shape_from_apn = parsed['features'].first['geometry']['rings']
+      puts "Response: #{shape_from_apn}"
+
+      shape_from_apn
+    rescue
+      log_error("Couldn't get shape for APN: #{apn}")
+      puts "Failed to fetch shape"
+      nil
+    end
+  end
+
   def self.build_column_value(input_row, keys)
     return '' if keys.nil? || keys == ''
     return input_row[keys] unless keys.kind_of?(Array)
@@ -88,31 +125,31 @@ class Merger
   end
 end
 
-# Merger.merge_file("2015 Registered Foreclosed Properties.csv", 'APN', 'Property Address', true)
-# Merger.merge_file("Assumed outside LA City Limits.csv", 'AIN', 'PropertyLocation')
-# Merger.merge_file("Brownfields Program - Sanitation Department.csv", 'APN', 'Address')
-# Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
-# Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
-# Merger.merge_file("City Owned Within CDs.csv", 'AIN', nil)
-# Merger.merge_file("CRA Option Properties .csv", nil, 'Address')
-# Merger.merge_file("CRA Property List Oct 2012.csv", 'Parcel Number', 'Address')
-# Merger.merge_file("Decommissioned Fire Stations.csv", 'APN', nil)
-# Merger.merge_file("GSD Facilities  For Filming.csv", nil, 'Address')
-# Merger.merge_file("Insured Buildings & Uninsured Buildings -CAO - 359.csv", nil, ['Address','City', 'State', 'Zip'])
-# Merger.merge_file("Leased properties to NPOs - GSD - 110 - FY 2014.csv", nil, 'Address')
-# Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2).csv", 'APN', 'Address')
-# Merger.merge_file("MICLA Commercial Paper Note Program.csv", nil, 'ADDRESS')
-# Merger.merge_file("Neighborhood Land Trust Empty Lots .csv", 'AIN', nil)
-Merger.merge_file("Own a Piece of LA - OPLA (3).csv", 'APN', 'ADDRESS', true)
-# Merger.merge_file("Parking Lots & Structures - LADOT.csv", nil, ['Address', 'Zip Code'])
-# Merger.merge_file("Projected Surplus Properties Sales FY15-16 (Per GSD).csv", 'APN', ['PROPERTY ADDRESS', 'ZIP'])
-# Merger.merge_file("Properties in BIDS - Compiled.csv", 'APN', 'Site Addr')
-# Merger.merge_file("Properties Recommended for Disposition byb HCIDLA.csv", nil, ['City', 'Zip Code'])
+Merger.merge_file("2015 Registered Foreclosed Properties.csv", 'APN', 'Property Address', true)
+Merger.merge_file("Assumed outside LA City Limits.csv", 'AIN', 'PropertyLocation')
+Merger.merge_file("Brownfields Program - Sanitation Department.csv", 'APN', 'Address')
+Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
+Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
+Merger.merge_file("City Owned Within CDs.csv", 'AIN', nil)
+Merger.merge_file("CRA Option Properties .csv", nil, 'Address')
+Merger.merge_file("CRA Property List Oct 2012.csv", 'Parcel Number', 'Address')
+Merger.merge_file("Decommissioned Fire Stations.csv", 'APN', nil)
+Merger.merge_file("GSD Facilities  For Filming.csv", nil, 'Address')
+Merger.merge_file("Insured Buildings & Uninsured Buildings -CAO - 359.csv", nil, ['Address','City', 'State', 'Zip'])
+Merger.merge_file("Leased properties to NPOs - GSD - 110 - FY 2014.csv", nil, 'Address')
+Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2).csv", 'APN', 'Address')
+Merger.merge_file("MICLA Commercial Paper Note Program.csv", nil, 'ADDRESS')
+Merger.merge_file("Neighborhood Land Trust Empty Lots .csv", 'AIN', nil)
+Merger.merge_file("Own a Piece of LA - OPLA (3).csv", 'APN', 'ADDRESS')
+Merger.merge_file("Parking Lots & Structures - LADOT.csv", nil, ['Address', 'Zip Code'])
+Merger.merge_file("Projected Surplus Properties Sales FY15-16 (Per GSD).csv", 'APN', ['PROPERTY ADDRESS', 'ZIP'])
+Merger.merge_file("Properties in BIDS - Compiled.csv", 'APN', 'Site Addr')
+Merger.merge_file("Properties Recommended for Disposition byb HCIDLA.csv", nil, ['City', 'Zip Code'])
 
 # # This file was manually cleaned!
-# Merger.merge_file("Recreation and Parks - Provided by Department manual cleaned.csv", 'APN', 'Address')
+Merger.merge_file("Recreation and Parks - Provided by Department manual cleaned.csv", 'APN', 'Address')
 
-# Merger.merge_file("Reported Nuisance Properties FYs 14-16__14-15_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
-# Merger.merge_file("Reported Nuisance Properties FYs 14-16__15-16_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
-# Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
-# Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
+Merger.merge_file("Reported Nuisance Properties FYs 14-16__14-15_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
+Merger.merge_file("Reported Nuisance Properties FYs 14-16__15-16_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
+Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
+Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')

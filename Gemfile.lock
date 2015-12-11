@@ -6,6 +6,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     fastercsv (1.5.5)
     geocoder (1.2.12)
+    georuby (2.5.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     mime-types (2.99)
@@ -32,6 +33,7 @@ DEPENDENCIES
   chardet
   fastercsv
   geocoder
+  georuby
   rest-client
   roo
 
