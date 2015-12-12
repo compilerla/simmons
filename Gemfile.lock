@@ -7,6 +7,7 @@ GEM
     fastercsv (1.5.5)
     geocoder (1.2.12)
     georuby (2.5.2)
+    geoutm (1.0.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     mime-types (2.99)
@@ -34,6 +35,7 @@ DEPENDENCIES
   fastercsv
   geocoder
   georuby
+  geoutm
   rest-client
   roo
 

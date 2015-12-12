@@ -2,6 +2,7 @@ require 'csv'
 require 'rest-client'
 require 'georuby'
 require 'geocoder'
+require 'securerandom'
 
 Geocoder.configure(:lookup => :bing, :api_key => 'ApTvle_X9rUx2hcfjmDTMZC4rpWEqoObbZCF00qIYKWmWNA4ojEiL67leiVi1Kw2')
 
@@ -159,6 +160,7 @@ class Geobuilder
     features = []
     in_csv.each do |row|
       features << build_feature_from_row(row)
+      break
     end
 
     in_csv.close
@@ -168,7 +170,7 @@ class Geobuilder
       "features": features
     }
 
-    File.open('../data/geo.geojson', 'w') { |file| file.write(feature_collection) }
+    File.open('../data/geo.geojson', 'w') { |file| file.write(feature_collection.to_json) }
   end  
 
   def self.build_feature_from_row(row)
@@ -177,11 +179,12 @@ class Geobuilder
         "type": "Feature",
         "geometry": {
           "type": "Polygon",
-          "coordinates": row['Shape coords from APN']
+          "coordinates": JSON.parse(row['Shape coords from APN']).map{ |polygon| polygon.map{ |coords| coords.map { |coord| coord / 100000  } } }
         },
         "properties": {
           "title": row['File name']
-        }
+        },
+        "id": SecureRandom.uuid
       }
     elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
       return {
@@ -192,7 +195,8 @@ class Geobuilder
         },
         "properties": {
           "title": row['File name']
-        }
+        },
+        "id": SecureRandom.uuid
       }
     end
   end
