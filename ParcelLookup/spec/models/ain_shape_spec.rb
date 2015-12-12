@@ -29,10 +29,17 @@ RSpec.describe AinShape, type: :model do
       expect(
         AinShape.containing_point(nickel_diner_point).first
       ).to eq @dtla_model
+      expect(
+        AinShape.containing_point(nickel_diner_point).count
+      ).to eq 1
 
       expect(
         AinShape.containing_point(mcarthur_point).first
       ).to eq @mcarthur_model
+
+      expect(
+        AinShape.containing_point(mcarthur_point).count
+      ).to eq 1
     end
 
     it 'should return nil if the point is not in a shape' do
