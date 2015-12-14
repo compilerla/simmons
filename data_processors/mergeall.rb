@@ -1,6 +1,6 @@
 require 'csv'
 require 'rest-client'
-require 'georuby'
+require 'merc_convert'
 require 'geocoder'
 require 'securerandom'
 
@@ -159,8 +159,8 @@ class Geobuilder
 
     features = []
     in_csv.each do |row|
-      features << build_feature_from_row(row)
-      break
+      feature = build_feature_from_row(row)
+      features << feature if feature
     end
 
     in_csv.close
@@ -179,25 +179,25 @@ class Geobuilder
         "type": "Feature",
         "geometry": {
           "type": "Polygon",
-          "coordinates": JSON.parse(row['Shape coords from APN']).map{ |polygon| polygon.map{ |coords| coords.map { |coord| coord / 100000  } } }
+          "coordinates": JSON.parse(row['Shape coords from APN']).map{ |polygon| polygon.map{ |coords| MercConvert.inverse(coords[0], coords[1]) } }
         },
         "properties": {
-          "title": row['File name']
+          "title": row['File name'].to_json
         },
         "id": SecureRandom.uuid
       }
-    elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
-      return {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": row['Latlng from address given']
-        },
-        "properties": {
-          "title": row['File name']
-        },
-        "id": SecureRandom.uuid
-      }
+    # elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
+    #   return {
+    #     "type": "Feature",
+    #     "geometry": {
+    #       "type": "Point",
+    #       "coordinates": JSON.parse(row['Latlng from address given'])
+    #     },
+    #     "properties": {
+    #       "title": row['File name'].to_json
+    #     },
+    #     "id": SecureRandom.uuid
+    #   }
     end
   end
 end
