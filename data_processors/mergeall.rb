@@ -88,7 +88,7 @@ class Merger
 
   def self.latlng_for_address(address)
     return nil unless address && address.length > 0
-
+    puts "Geocoding #{address}"
     geo_response = Geocoder.search(address).first
     if geo_response.nil?
       log_error("Couldn't geocode address: #{address}")
@@ -214,7 +214,10 @@ end
 # Merger.merge_file("GSD Facilities  For Filming.csv", nil, 'Address')
 # Merger.merge_file("Insured Buildings & Uninsured Buildings -CAO - 359.csv", nil, ['Address','City', 'State', 'Zip'])
 # Merger.merge_file("Leased properties to NPOs - GSD - 110 - FY 2014.csv", nil, 'Address')
-Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', 'Address')
+
+# Manually cleaned
+# Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', 'Address')
+
 # Merger.merge_file("MICLA Commercial Paper Note Program.csv", nil, 'ADDRESS')
 # Merger.merge_file("Neighborhood Land Trust Empty Lots .csv", 'AIN', nil)
 # Merger.merge_file("Own a Piece of LA - OPLA (3).csv", 'APN', 'ADDRESS')
@@ -222,7 +225,6 @@ Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manua
 # Merger.merge_file("Projected Surplus Properties Sales FY15-16 (Per GSD).csv", 'APN', ['PROPERTY ADDRESS', 'ZIP'])
 # Merger.merge_file("Properties in BIDS - Compiled.csv", 'APN', 'Site Addr')
 # Merger.merge_file("Properties Recommended for Disposition byb HCIDLA.csv", nil, ['City', 'Zip Code'])
-
 # # # This file was manually cleaned!
 # Merger.merge_file("Recreation and Parks - Provided by Department manual cleaned.csv", 'APN', 'Address')
 
@@ -230,7 +232,8 @@ Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manua
 # Merger.merge_file("Reported Nuisance Properties FYs 14-16__15-16_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
 # Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
+# Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
-# Merger.patch_missing_geos
+Merger.patch_missing_geos
 
 # Geobuilder.build
