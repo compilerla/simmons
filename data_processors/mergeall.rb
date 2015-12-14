@@ -3,6 +3,7 @@ require 'rest-client'
 require 'merc_convert'
 require 'geocoder'
 require 'securerandom'
+require '../property_deduper.rb'
 
 Geocoder.configure(:lookup => :bing, :api_key => 'ApTvle_X9rUx2hcfjmDTMZC4rpWEqoObbZCF00qIYKWmWNA4ojEiL67leiVi1Kw2')
 
@@ -27,6 +28,33 @@ class Housekeeping
     else
       apn
     end
+  end
+end
+
+class Deduper
+  def self.dedup_all
+    in_csv = CSV.open("../data/master_with_dups.csv", { headers: true })
+    out_csv = CSV.open("../data/master_without_dups.csv", "wb")
+    out_csv << ['APN', 'Address', 'Times encountered', 'Lists']
+
+    deduper = PropertyDeduper.new
+
+    in_csv.each do |row|
+      list = row['File name']
+      apn = row['APN given']
+      address = (row['Address from APN'] != '' ? row['Address from APN'] : row['Address given'])
+
+      deduper.add(apn, address, list)
+    end
+
+    deduper.each_property do |property|
+      out_csv << [property[:apn], property[:address], property[:times_encountered], property[:source_lists].join(', ')]
+    end
+
+    puts "Finished! #{deduper.dups} duplicates."
+
+    in_csv.close
+    out_csv.close
   end
 end
 
@@ -234,6 +262,8 @@ end
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
 # Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
-Merger.patch_missing_geos
+# Merger.patch_missing_geos
 
 # Geobuilder.build
+
+Deduper.dedup_all
