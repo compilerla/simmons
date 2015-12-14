@@ -214,7 +214,7 @@ end
 # Merger.merge_file("GSD Facilities  For Filming.csv", nil, 'Address')
 # Merger.merge_file("Insured Buildings & Uninsured Buildings -CAO - 359.csv", nil, ['Address','City', 'State', 'Zip'])
 # Merger.merge_file("Leased properties to NPOs - GSD - 110 - FY 2014.csv", nil, 'Address')
-# Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2).csv", 'APN', 'Address')
+Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', 'Address')
 # Merger.merge_file("MICLA Commercial Paper Note Program.csv", nil, 'ADDRESS')
 # Merger.merge_file("Neighborhood Land Trust Empty Lots .csv", 'AIN', nil)
 # Merger.merge_file("Own a Piece of LA - OPLA (3).csv", 'APN', 'ADDRESS')
@@ -233,4 +233,4 @@ end
 
 # Merger.patch_missing_geos
 
-Geobuilder.build
+# Geobuilder.build
