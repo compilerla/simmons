@@ -1,5 +1,5 @@
 require 'csv'
-#require 'rest-client'
+require 'rest-client'
 require 'merc_convert'
 require 'geocoder'
 require 'securerandom'
