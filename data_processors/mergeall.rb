@@ -35,20 +35,24 @@ class Deduper
   def self.dedup_all
     in_csv = CSV.open("../data/master_with_dups.csv", { headers: true })
     out_csv = CSV.open("../data/master_without_dups.csv", "wb")
-    out_csv << ['APN', 'Address', 'Times encountered', 'Lists']
+
+    out_csv << ['APN', 'Address given', 'Address from apn', 'Times encountered', 'Lists', 'Shape', 'Latlng from address given']
 
     deduper = PropertyDeduper.new
 
     in_csv.each do |row|
       list = row['File name']
       apn = row['APN given']
-      address = (row['Address from APN'] != '' ? row['Address from APN'] : row['Address given'])
+      address_from_apn = row['Address from APN']
+      address_given = row['Address given']
+      shape = row['Shape coords from APN']
+      latlng = row['Latlng from address given']
 
-      deduper.add(apn, address, list)
+      deduper.add(apn, address_from_apn, address_given, list, shape, latlng)
     end
 
     deduper.each_property do |property|
-      out_csv << [property[:apn], property[:address], property[:times_encountered], property[:source_lists].join(', ')]
+      out_csv << [property[:apn], property[:address_given], property[:address_from_apn], property[:times_encountered], property[:source_lists].join(', '), property[:shape_from_apn], property[:latlng_from_address]]
     end
 
     puts "Finished! #{deduper.dups} duplicates."
@@ -244,7 +248,7 @@ end
 # Merger.merge_file("Leased properties to NPOs - GSD - 110 - FY 2014.csv", nil, 'Address')
 
 # Manually cleaned
-Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', ['Address', 'City'])
+# Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', ['Address', 'City'])
 
 # Merger.merge_file("MICLA Commercial Paper Note Program.csv", nil, 'ADDRESS')
 # Merger.merge_file("Neighborhood Land Trust Empty Lots .csv", 'AIN', nil)
@@ -260,10 +264,10 @@ Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manua
 # Merger.merge_file("Reported Nuisance Properties FYs 14-16__15-16_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
 # Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
-Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
+# Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
 # Merger.patch_missing_geos
 
 # Geobuilder.build
 
-# Deduper.dedup_all
+Deduper.dedup_all
