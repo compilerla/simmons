@@ -1,39 +1,16 @@
 == README
 
-After bundling, createing psql db and running migrations fire up a rails console and run the following to get an idea of how the rgeo paradigm works.
+After bundling, createing psql db and running migrations check out the spec/models/ain_shape_spec.rb to get an idea of how rgeo works.
 
+Then assuming all of the parcel shapefiles are in geo.geojson in the simmons/data directory you can populate the data doing the following:
 
-  factory = ::RGeo::Geographic.simple_mercator_factory()
+  bundle
+  rake db:create
+  rake db:migrate
+  rake db:seed
 
-  # need to create lon then lat points
-  point1 = factory.point(-118.273990, 34.038269) # 110 10 fwy intersection
-  point2 = factory.point(-118.248650, 34.062815) #101 110 fwy intersection
-  point3 = factory.point(-118.214149, 34.055181) # 10 5 fwy intersection
-  point4 = factory.point(-118.222040, 34.030473) # 101 5 fwy intersection
+You can then fire up a console and find the shape which surrounds the van nuys airport
 
-  dtla_string = factory.line_string([point1, point2, point3, point4]) #line around dtla
-
-  dtla_polygon = factory.polygon(dtla_string) # polygon of dtla
-
-  nickel_diner = factory.point(-118.248243, 34.045488)
-  mcarthur_park = factory.point(-118.277200, 34.058933)
-
-  dtla_polygon.contains?(nickel_diner) # true
-
-  dtla_polygon.contains?(mcarthur_park) # false
-
-Now lets see if we can get this working using our model
-
-  dtla_model = AinShape.new
-  dtla_model.shape = dtla_polygon
-  dtla_model.ain = '1234567890'
-  dtla_model.save
-
-  #  => #<AinShape id: 1, shape: #<RGeo::Geographic::ProjectedPolygonImpl:0x3fefe10e90a0 "POLYGON ((-118.27399 34.038269, -118.24865 34.062815, -118.214149 34.055181, -118.22204 34.03047 3, -118.27399 34.038269))">, ain: "1234567890">
-
-  AinShape.where("ain_shapes.shape && ?", nickel_diner).first.ain # "1234567890"
-
-  AinShape.where("ain_shapes.shape && ?", mcarthur_park).first # nil
-
-
+  rails c
+  >> AinShape.find_by_lat_lon(34.207422, -118.487737)
 
