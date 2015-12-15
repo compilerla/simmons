@@ -106,6 +106,27 @@ class Merger
     out_csv.close
   end
 
+  def self.patch_missing_shapes
+    in_csv = CSV.open("../data/master_with_dups.csv", { headers: true })
+    out_csv = CSV.open("../data/master_with_dups_patched.csv", "wb")
+
+    out_csv << headers
+    in_csv.each do |row|
+      if row['Shape coords from APN'].nil? || row['Shape coords from APN'] == '' && (!row['APN given'].nil? && row['APN given'] != '')
+        puts "Querying #{row['APN given']}..."
+        row['Shape coords from APN'] = shape_from_apn(row['APN given'].strip)
+        puts "Done: #{row['Shape coords from APN']}"
+      else
+        puts "Skipping..."
+      end
+
+      out_csv << row
+    end
+
+    in_csv.close
+    out_csv.close
+  end
+
   def self.generate_cleaned_rows(row, file_name, apn_col, address_col)
     apn_raw = apn_col.nil? ? '' : row[apn_col]
       
@@ -163,7 +184,8 @@ class Merger
     shape_from_apn = nil
     puts "Checking shape for apn: #{apn}"
     begin
-      request = RestClient.get("http://maps.lacity.org/lahub/rest/services/Landbase_Information/MapServer/5/query?where=BPP%3D%27#{apn}%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=json")
+      url = "http://assessor.gis.lacounty.gov/assessor/rest/services/PAIS/pais_parcels/MapServer/0/query?f=json&where=AIN%20%3D%20%27#{apn}%27&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=AIN&outSR=102100"
+      request = RestClient.get(url)
       parsed = JSON.parse(request)
       shape_from_apn = parsed['features'].first['geometry']['rings']
       puts "Response: #{shape_from_apn}"
@@ -266,8 +288,8 @@ end
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
 # Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
-# Merger.patch_missing_geos
+Merger.patch_missing_shapes
 
 # Geobuilder.build
 
-Deduper.dedup_all
+# Deduper.dedup_all
