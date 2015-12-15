@@ -288,8 +288,8 @@ end
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
 # Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
-Merger.patch_missing_shapes
+# Merger.patch_missing_shapes
 
-# Geobuilder.build
+Geobuilder.build
 
 # Deduper.dedup_all
