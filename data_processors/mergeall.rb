@@ -1,5 +1,5 @@
 require 'csv'
-require 'rest-client'
+#require 'rest-client'
 require 'merc_convert'
 require 'geocoder'
 require 'securerandom'
@@ -238,7 +238,7 @@ class Geobuilder
         "properties": {
           "title": row['File name']
         },
-        "id": SecureRandom.uuid
+        "id": row['APN given']
       }
     elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
       return {
