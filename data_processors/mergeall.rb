@@ -210,22 +210,22 @@ class Geobuilder
           "coordinates": JSON.parse(row['Shape coords from APN']).map{ |polygon| polygon.map{ |coords| MercConvert.inverse(coords[0], coords[1]) } }
         },
         "properties": {
-          "title": row['File name'].to_json
+          "title": row['File name']
         },
         "id": SecureRandom.uuid
       }
-    # elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
-    #   return {
-    #     "type": "Feature",
-    #     "geometry": {
-    #       "type": "Point",
-    #       "coordinates": JSON.parse(row['Latlng from address given'])
-    #     },
-    #     "properties": {
-    #       "title": row['File name'].to_json
-    #     },
-    #     "id": SecureRandom.uuid
-    #   }
+    elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
+      return {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": JSON.parse(row['Latlng from address given'])
+        },
+        "properties": {
+          "title": row['File name']
+        },
+        "id": SecureRandom.uuid
+      }
     end
   end
 end
@@ -244,7 +244,7 @@ end
 # Merger.merge_file("Leased properties to NPOs - GSD - 110 - FY 2014.csv", nil, 'Address')
 
 # Manually cleaned
-# Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', 'Address')
+Merger.merge_file("Master Property List (Simple) 03-7-2013- Update (1) (2) manual cleaned.csv", 'APN', ['Address', 'City'])
 
 # Merger.merge_file("MICLA Commercial Paper Note Program.csv", nil, 'ADDRESS')
 # Merger.merge_file("Neighborhood Land Trust Empty Lots .csv", 'AIN', nil)
@@ -260,10 +260,10 @@ end
 # Merger.merge_file("Reported Nuisance Properties FYs 14-16__15-16_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
 # Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
-# Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
+Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
 # Merger.patch_missing_geos
 
 # Geobuilder.build
 
-Deduper.dedup_all
+# Deduper.dedup_all
