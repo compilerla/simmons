@@ -245,7 +245,7 @@ class Geobuilder
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": JSON.parse(row['Latlng from address given'])
+          "coordinates": JSON.parse(row['Latlng from address given']).reverse
         },
         "properties": {
           "title": row['File name']
