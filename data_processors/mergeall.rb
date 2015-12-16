@@ -236,7 +236,8 @@ class Geobuilder
           "coordinates": JSON.parse(row['Shape coords from APN']).map{ |polygon| polygon.map{ |coords| MercConvert.inverse(coords[0], coords[1]) } }
         },
         "properties": {
-          "title": row['File name']
+          "title": row['File name'],
+          "APN": row['APN given']
         },
         "id": row['APN given']
       }
@@ -248,7 +249,8 @@ class Geobuilder
           "coordinates": JSON.parse(row['Latlng from address given']).reverse
         },
         "properties": {
-          "title": row['File name']
+          "title": row['File name'],
+          "address": row['Address given']
         },
         "id": SecureRandom.uuid
       }
