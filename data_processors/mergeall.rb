@@ -238,7 +238,7 @@ class Geobuilder
         "properties": {
           "title": row['File name']
         },
-        "id": SecureRandom.uuid
+        "id": row['APN given']
       }
     elsif !row['Latlng from address given'].nil? && row['Latlng from address given'] != ''
       return {
