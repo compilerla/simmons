@@ -282,7 +282,7 @@ end
 # Merger.merge_file("Properties in BIDS - Compiled.csv", 'APN', 'Site Addr')
 # Merger.merge_file("Properties Recommended for Disposition byb HCIDLA.csv", nil, ['City', 'Zip Code'])
 # # # This file was manually cleaned!
-Merger.merge_file("Recreation and Parks - Provided by Department manual cleaned.csv", 'APN', ['Address', 'City'])
+# Merger.merge_file("Recreation and Parks - Provided by Department manual cleaned.csv", 'APN', ['Address', 'City'])
 
 # Merger.merge_file("Reported Nuisance Properties FYs 14-16__14-15_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
 # Merger.merge_file("Reported Nuisance Properties FYs 14-16__15-16_sheet.csv", nil, ['Street #', 'Street Name', 'City & ZIP'])
@@ -292,6 +292,6 @@ Merger.merge_file("Recreation and Parks - Provided by Department manual cleaned.
 
 # Merger.patch_missing_shapes
 
-# Geobuilder.build
+Geobuilder.build
 
 # Deduper.dedup_all
