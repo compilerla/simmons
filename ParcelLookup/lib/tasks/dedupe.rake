@@ -15,7 +15,7 @@ namespace :data do
           AinShapesMasterRecord.create(master_record_id: master_record.id,
                                         ain_shape_id: inclusion_match.id,
                                          match_method: 'point in shape')
-        p "point match"
+          p "point match"
         end
       end
     end

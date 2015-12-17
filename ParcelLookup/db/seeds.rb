@@ -1,21 +1,14 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-#
 require 'json'
+require 'csv'
 
 factory = RGeo::Geographic.simple_mercator_factory()
 
-file = File.read('../data/geo.geojson');0
-data_hash = JSON.parse(file);0
+# Load shape files into the ain_shapes_table
+shapes_file = File.read('../data/geo.geojson');0
+data_hash = JSON.parse(shapes_file);0
 
 data_hash['features'].each do |parcel|
   next unless parcel['geometry']['type'] == "Polygon"
-  p parcel["geometry"]["coordinates"].first
   parcel_points = parcel["geometry"]["coordinates"].first.map do |coords|
     factory.point(coords[0], coords[1])
   end
@@ -23,6 +16,12 @@ data_hash['features'].each do |parcel|
   parcel_polygon = factory.polygon(parcel_string)
   next if AinShape.where(ain: parcel['properties']['APN']).count > 0
   AinShape.where(ain: parcel['properties']['APN'], shape: parcel_polygon).first_or_create
+end
+data_hash = {}
+
+# Load master_with_dupes into the master_record table
+
+  AinShape.create(ain: parcel['properties']['APN'], shape: parcel_polygon)
 end
 data_hash = {}
 

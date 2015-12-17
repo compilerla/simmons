@@ -4,8 +4,6 @@ class AinShape < ActiveRecord::Base
   has_many :ain_shapes_master_record, dependent: :destroy, foreign_key: :ain_shape_id
   has_many :master_records, -> { uniq }, through: :ain_shapes_master_record
 
->>>>>>> Stashed changes
-
   def self.find_by_lat_lon(lat, lon)
     factory = RGeo::Geographic.simple_mercator_factory()
     point = factory.point(lon, lat)
