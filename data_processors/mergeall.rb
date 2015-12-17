@@ -5,7 +5,11 @@ require 'geocoder'
 require 'securerandom'
 require '../property_deduper.rb'
 
-Geocoder.configure(:lookup => :bing, :api_key => 'ApTvle_X9rUx2hcfjmDTMZC4rpWEqoObbZCF00qIYKWmWNA4ojEiL67leiVi1Kw2')
+Geocoder.configure( :lookup => :google,
+                    :use_https => true,
+                    :api_key => 'AIzaSyDzL_IIGdqVTs0_E6Oln6uYoJMXEffHfyk',
+                    :region => 'us'
+                  )
 
 class Housekeeping
   def self.clean_apn(apn)
@@ -89,14 +93,19 @@ class Merger
     in_csv = CSV.open("../data/master_with_dups.csv", { headers: true })
     out_csv = CSV.open("../data/master_with_dups_patched.csv", "wb")
 
+    processed = 0
+    skipped = 0
+
     out_csv << headers
     in_csv.each do |row|
-      if row['Latlng from address given'].nil? || row['Latlng from address given'] == ''
-        puts "geocoding #{row['Latlng from address given']}..."
+      processed += 1
+      if (row['APN given'].nil? || row['APN given'] == '') && (!row['Address given'].nil? && row['Address given'] != '')
+        puts "#{processed}: Geocoding #{row['Address given']}..."
         row['Latlng from address given'] = latlng_for_address(row['Address given'])
         puts "Done: #{row['Latlng from address given']}"
       else
-        puts "latlng present, skipping..."
+        skipped += 1
+        puts "APN present or no address, skipping... (#{skipped})"
       end
 
       out_csv << row
@@ -299,8 +308,8 @@ end
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
 # Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
 
-# Merger.patch_missing_shapes
+Merger.patch_missing_geos
 
-Geobuilder.build
+# Geobuilder.build
 
 # Deduper.dedup_all
