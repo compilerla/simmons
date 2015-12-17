@@ -184,12 +184,21 @@ class Merger
     shape_from_apn = nil
     puts "Checking shape for apn: #{apn}"
     begin
-      url = "http://assessor.gis.lacounty.gov/assessor/rest/services/PAIS/pais_parcels/MapServer/0/query?f=json&where=AIN%20%3D%20%27#{apn}%27&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=AIN&outSR=102100"
+      url = "http://maps.lacity.org/lahub/rest/services/Landbase_Information/MapServer/5/query?where=BPP%3D%275163005007%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=json"
       request = RestClient.get(url)
       parsed = JSON.parse(request)
-      shape_from_apn = parsed['features'].first['geometry']['rings']
-      puts "Response: #{shape_from_apn}"
 
+      if parsed['features'].any?
+        shape_from_apn = parsed['features'].first['geometry']['rings']
+      else
+        puts "City failed. Using county."
+        url = "http://assessor.gis.lacounty.gov/assessor/rest/services/PAIS/pais_parcels/MapServer/0/query?f=json&where=AIN%20%3D%20%27#{apn}%27&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=AIN&outSR=102100"
+        request = RestClient.get(url)
+        parsed = JSON.parse(request)
+        shape_from_apn = parsed['features'].first['geometry']['rings']
+      end  
+
+      puts "Response: #{shape_from_apn}"
       shape_from_apn
     rescue
       log_error("Couldn't get shape for APN: #{apn}")
@@ -261,8 +270,8 @@ end
 # Merger.merge_file("2015 Registered Foreclosed Properties.csv", 'APN', 'Property Address', true)
 # Merger.merge_file("Assumed outside LA City Limits.csv", 'AIN', 'PropertyLocation')
 # Merger.merge_file("Brownfields Program - Sanitation Department.csv", 'APN', 'Address')
-Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Community', 'Zip Code'])
-# Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Zip Code'])
+# Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Community', 'Zip Code'])
+Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Community', 'Zip Code'])
 # Merger.merge_file("City Owned Within CDs.csv", 'AIN', nil)
 # Merger.merge_file("CRA Option Properties .csv", nil, 'Address')
 # Merger.merge_file("CRA Property List Oct 2012.csv", 'Parcel Number', 'Address')
@@ -292,6 +301,6 @@ Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.cs
 
 # Merger.patch_missing_shapes
 
-Geobuilder.build
+# Geobuilder.build
 
 # Deduper.dedup_all
