@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151212203226) do
+ActiveRecord::Schema.define(version: 20151217161708) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,21 @@ ActiveRecord::Schema.define(version: 20151212203226) do
   create_table "ain_shapes", force: :cascade do |t|
     t.geometry "shape", limit: {:srid=>0, :type=>"polygon"}
     t.string   "ain"
+  end
+
+  create_table "ain_shapes_master_records", force: :cascade do |t|
+    t.integer "master_record_id"
+    t.integer "ain_shape_id"
+    t.string  "match_method"
+  end
+
+  create_table "master_records", force: :cascade do |t|
+    t.string "file_name"
+    t.string "apn_given"
+    t.string "address_given"
+    t.string "address_from_apn"
+    t.float  "address_latitude"
+    t.float  "address_longitude"
   end
 
 end
