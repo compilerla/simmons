@@ -9,8 +9,20 @@ Then assuming all of the parcel shapefiles are in geo.geojson in the simmons/dat
   rake db:migrate
   rake db:seed
 
+The seed will load all shapes into the AinShape model, and will load everything from "../data/master_with_dupes.csv" into MasterRecord model.
 You can then fire up a console and find the shape which surrounds the van nuys airport
 
   rails c
   >> AinShape.find_by_lat_lon(34.207422, -118.487737)
 
+Now to dedupe
+  rake data:dedupe
+  
+It will first try to find a match by ain and then will try to match with lat lons in the shapes if there is no ain match.  When I run this locally I get
+  AinShapesMasterRecord.group(:match_method).count
+    # {"point in shape"=>1818, "ain match"=>17854}
+  MasterRecord.not_yet_matched.count
+    # 7571
+
+
+  
