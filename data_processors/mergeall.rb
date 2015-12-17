@@ -271,7 +271,7 @@ end
 # Merger.merge_file("Assumed outside LA City Limits.csv", 'AIN', 'PropertyLocation')
 # Merger.merge_file("Brownfields Program - Sanitation Department.csv", 'APN', 'Address')
 # Merger.merge_file("Building Book - GSD - 4468 FY 2014_by_building_book_number.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Community', 'Zip Code'])
-Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Community', 'Zip Code'])
+# Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'APN', ['Street #', 'Street Dir', 'Street Name', 'Street Type', 'Community', 'Zip Code'])
 # Merger.merge_file("City Owned Within CDs.csv", 'AIN', nil)
 # Merger.merge_file("CRA Option Properties .csv", nil, 'Address')
 # Merger.merge_file("CRA Property List Oct 2012.csv", 'Parcel Number', 'Address')
@@ -301,6 +301,6 @@ Merger.merge_file("Building Book - GSD - 4468 FY 2014_listed_by_address.csv", 'A
 
 # Merger.patch_missing_shapes
 
-# Geobuilder.build
+Geobuilder.build
 
 # Deduper.dedup_all
