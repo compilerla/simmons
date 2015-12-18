@@ -21,12 +21,6 @@ data_hash = {}
 
 # Load master_with_dupes into the master_record table
 
-  AinShape.create(ain: parcel['properties']['APN'], shape: parcel_polygon)
-end
-data_hash = {}
-
-# Load master_with_dupes into the master_record table
-
 CSV.open('../data/master_with_dups.csv', headers: true) do |in_csv|
   in_csv.each do |row|
     lat = JSON.parse(row['Latlng from address given'] || '[]')[0]

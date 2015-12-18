@@ -17,6 +17,31 @@ namespace :data do
         out_row << shape.master_records.pluck(:file_name)
         out_csv << out_row
       end
+
+      no_ains = MasterRecord.not_yet_matched.group([:address_latitude, :address_longitude]).count
+      not_matched.each do |(lat, lon), count|
+        next if lat.nil?
+        out_row = []
+        out_row << nil
+        records = MasterRecord.where(address_latitude: lat, address_longitude: lon)
+        out_row << records.first.address_given
+        out_row << records.first.address_from_apn
+        out_row << records.first.address_latitude
+        out_row << records.first.address_longitude
+        out_row << records.pluck(:file_name)
+        out_csv << out_row
+      end
+
+      no_lat_lon = MasterRecord.not_yet_matched.where(address_longitude: nil, address_latitude: nil).count
+      no_lat_lon.each do |record|
+        out_row << nil
+        out_row << record.address_given
+        out_row << record.address_from_apn
+        out_row << record.address_latitude
+        out_row << record.address_longitude
+        out_row << record.file_name
+        out_csv << out_row
+      end
     end
   end
 end
