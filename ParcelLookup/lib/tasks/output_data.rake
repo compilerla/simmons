@@ -52,17 +52,20 @@ namespace :data do
         used_ids = used_ids.flatten
         # p out_row if records.first.apn_given.empty?
         out_csv << out_row
-        geojson_features << {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [records.first.address_longitude, records.first.address_latitude]
-          },
-          "properties": {
-            "title": records.pluck(:file_name).join(', '),
-            "address": records.first.address_given
+
+        if records.first.address_longitude.present?
+          geojson_features << {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [records.first.address_longitude, records.first.address_latitude]
+            },
+            "properties": {
+              "title": records.pluck(:file_name).join(', '),
+              "address": records.first.address_given
+            }
           }
-        }
+        end
       end
 
       # p "going into everything else"
@@ -77,17 +80,20 @@ namespace :data do
         out_row << record.file_name
         # p out_row if record.apn_given.empty?
         out_csv << out_row
-        geojson_features << {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [record.address_longitude, record.address_latitude]
-          },
-          "properties": {
-            "title": record,
-            "address": record.address_given
+
+        if record.address_longitude.present?
+          geojson_features << {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [record.address_longitude, record.address_latitude]
+            },
+            "properties": {
+              "title": record,
+              "address": record.address_given
+            }
           }
-        }
+        end
       end
     end
 
