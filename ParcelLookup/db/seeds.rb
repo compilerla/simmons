@@ -25,6 +25,8 @@ CSV.open('../data/master_with_dups.csv', headers: true) do |in_csv|
   in_csv.each do |row|
     lat = JSON.parse(row['Latlng from address given'] || '[]')[0]
     lon = JSON.parse(row['Latlng from address given'] || '[]')[1]
+    p row if row['APN given'].empty?
+
     MasterRecord.create(file_name: row['File name'],
                          apn_given: row['APN given'],
                          address_given: row['Address given'],
