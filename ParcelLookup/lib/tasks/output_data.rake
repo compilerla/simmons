@@ -46,7 +46,7 @@ namespace :data do
       no_lat_lon = MasterRecord.not_yet_matched.where.not(id: used_ids)
       no_lat_lon.each do |record|
         out_row = []
-        out_row << records.first.apn_given
+        out_row << record.apn_given
         out_row << record.address_given
         out_row << record.address_from_apn
         out_row << record.address_latitude
