@@ -7,6 +7,7 @@ namespace :data do
     headers = %w(ain supplied_address address_from_apn latitude longitude source_files)
     CSV.open('../data/deduped_by_ain.csv', 'wb') do |out_csv|
       out_csv << headers
+      # Output everything that matched to an AIN
       AinShape.all.each do |shape|
         out_row = []
         out_row << shape.ain
@@ -19,6 +20,7 @@ namespace :data do
       end
 
       no_ains = MasterRecord.not_yet_matched.group([:address_latitude, :address_longitude]).count
+      # Output everything that has a lat and lon but not AIN grouped by lat and lon
       not_matched.each do |(lat, lon), count|
         next if lat.nil?
         out_row = []
@@ -33,6 +35,7 @@ namespace :data do
       end
 
       no_lat_lon = MasterRecord.not_yet_matched.where(address_longitude: nil, address_latitude: nil).count
+      # Output files that have no lat or lon
       no_lat_lon.each do |record|
         out_row << nil
         out_row << record.address_given
