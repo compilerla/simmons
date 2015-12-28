@@ -2,6 +2,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     chardet (0.9.0)
+    csv2json (0.3.0)
+      json
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
     fastercsv (1.5.5)
@@ -10,11 +12,13 @@ GEM
     geoutm (1.0.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    json (1.8.3)
     mime-types (2.99)
     mini_portile2 (2.0.0)
     netrc (0.11.0)
     nokogiri (1.6.7)
       mini_portile2 (~> 2.0.0.rc2)
+    orderedhash (0.0.6)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -32,10 +36,12 @@ PLATFORMS
 
 DEPENDENCIES
   chardet
+  csv2json
   fastercsv
   geocoder
   georuby
   geoutm
+  orderedhash
   rest-client
   roo
 

@@ -85,8 +85,26 @@ class Merger
     out_csv.close
   end
 
+  def self.update_headers
+    in_csv = CSV.open("../data/master_with_dups.csv", { headers: true })
+    out_csv = CSV.open("../data/master_with_dups_updated_headers.csv", "wb")
+
+    out_csv << headers
+    in_csv.each do |row|
+      headers.each do |header|
+        if !row[header]
+          row[header] = ''
+        end
+      end
+      out_csv << row
+    end
+
+    in_csv.close
+    out_csv.close
+  end
+
   def self.headers
-    ['File name', 'APN given', 'Address given', 'Address from APN', 'Shape coords from APN', 'Latlng from address given']
+    ['File name', 'APN given', 'Address given', 'Address from APN', 'Shape coords from APN', 'Latlng from address given', 'Latlng from city API', 'Assessed value', 'council district', 'Property Type', 'Region/Cluster', 'Tax Rate Area', 'Recording Date', 'Land', 'Improvements', 'Property Boundary Description', 'Building Square Footage', 'Year Built/Effective Year Built', 'Units']
   end
 
   def self.patch_missing_geos
@@ -307,9 +325,9 @@ end
 # Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
 # Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
-Merger.merge_file("HCIDLA Owned Properties for Filming.csv", nil, ['Address', 'City'])
+# Merger.merge_file("HCIDLA Owned Properties for Filming.csv", nil, ['Address', 'City'])
 
-# Merger.patch_missing_geos
+Merger.update_headers
 
 # Geobuilder.build
 
