@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151217161708) do
+ActiveRecord::Schema.define(version: 20151229005552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+  enable_extension "hstore"
 
   create_table "ain_shapes", force: :cascade do |t|
     t.geometry "shape", limit: {:srid=>0, :type=>"polygon"}
@@ -35,6 +36,7 @@ ActiveRecord::Schema.define(version: 20151217161708) do
     t.string "address_from_apn"
     t.float  "address_latitude"
     t.float  "address_longitude"
+    t.hstore "info"
   end
 
 end

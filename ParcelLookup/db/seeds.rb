@@ -22,9 +22,10 @@ data_hash = {}
 # Load master_with_dupes into the master_record table
 
 CSV.open('../data/master_with_dups.csv', headers: true) do |in_csv|
-  in_csv.each do |row|
-    lat = JSON.parse(row['Latlng from address given'] || '[]')[0]
-    lon = JSON.parse(row['Latlng from address given'] || '[]')[1]
+  in_csv.each_with_index do |row, index|
+    latlng = (!row['Latlng from address given'].nil? && row['Latlng from address given']!= '' ? JSON.parse(row['Latlng from address given']) : [])
+    lat = latlng[0]
+    lon = latlng[1]
     p row if row['APN given'].empty?
 
     MasterRecord.create(file_name: row['File name'],

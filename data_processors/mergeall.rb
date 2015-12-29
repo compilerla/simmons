@@ -211,11 +211,13 @@ class Merger
     shape_from_apn = nil
     puts "Checking shape for apn: #{apn}"
     begin
-      url = "http://maps.lacity.org/lahub/rest/services/Landbase_Information/MapServer/5/query?where=BPP%3D%275163005007%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=json"
+      puts "Trying city"
+      url = "http://maps.lacity.org/lahub/rest/services/Landbase_Information/MapServer/5/query?where=BPP%3D%27#{apn}%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=json"
       request = RestClient.get(url)
       parsed = JSON.parse(request)
 
       if parsed['features'].any?
+        p "Found city shape"
         shape_from_apn = parsed['features'].first['geometry']['rings']
       else
         puts "City failed. Using county."
@@ -332,3 +334,17 @@ end
 Geobuilder.build
 
 # Deduper.dedup_all
+
+# out_csv = CSV.open("../data/master_with_dups_patched.csv", "wb")
+# out_csv << Merger.headers
+# wrong = []
+# CSV.open "../data/master_with_dups.csv", { headers: true } do |in_csv|
+#   in_csv.each do |row|
+#     if row['Shape coords from APN'] == "[[[-13161727.408599999, 4035207.3442], [-13161727.3842, 4035225.8029000014], [-13161665.7819, 4035225.8844000027], [-13161665.8081, 4035207.425800003], [-13161684.5502, 4035207.4010000005], [-13161690.7974, 4035207.3927000016], [-13161727.408599999, 4035207.3442]]]"
+#       row['Shape coords from APN'] = Merger.shape_from_apn(row['APN given'])
+#     end
+#     out_csv << row
+#   end
+# end
+
+# out_csv.close
