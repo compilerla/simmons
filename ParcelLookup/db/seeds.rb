@@ -28,7 +28,7 @@ CSV.open('../data/master_with_dups.csv', headers: true) do |in_csv|
     lon = latlng[1]
     p row if row['APN given'].empty?
 
-    MasterRecord.create(file_name: row['File name'],
+    MasterRecord.create!(file_name: row['File name'],
                          apn_given: row['APN given'],
                          address_given: row['Address given'],
                          address_from_apn: row['Address from APN'],
