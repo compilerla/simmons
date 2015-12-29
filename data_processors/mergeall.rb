@@ -331,20 +331,20 @@ end
 
 # Merger.update_headers
 
-Geobuilder.build
+# Geobuilder.build
 
 # Deduper.dedup_all
 
-# out_csv = CSV.open("../data/master_with_dups_patched.csv", "wb")
-# out_csv << Merger.headers
-# wrong = []
-# CSV.open "../data/master_with_dups.csv", { headers: true } do |in_csv|
-#   in_csv.each do |row|
-#     if row['Shape coords from APN'] == "[[[-13161727.408599999, 4035207.3442], [-13161727.3842, 4035225.8029000014], [-13161665.7819, 4035225.8844000027], [-13161665.8081, 4035207.425800003], [-13161684.5502, 4035207.4010000005], [-13161690.7974, 4035207.3927000016], [-13161727.408599999, 4035207.3442]]]"
-#       row['Shape coords from APN'] = Merger.shape_from_apn(row['APN given'])
-#     end
-#     out_csv << row
-#   end
-# end
+out_csv = CSV.open("../data/master_with_dups_patched.csv", "wb")
+out_csv << Merger.headers
+wrong = []
+CSV.open "../data/master_with_dups.csv", { headers: true } do |in_csv|
+  in_csv.each do |row|
+    if row['Shape coords from APN'].nil? || row['Shape coords from APN'] == ''
+      row['Shape coords from APN'] = Merger.shape_from_apn(row['APN given'])
+    end
+    out_csv << row
+  end
+end
 
 # out_csv.close
