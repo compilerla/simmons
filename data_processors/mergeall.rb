@@ -325,10 +325,10 @@ end
 # Merger.merge_file("Residential Leases - GSD - 11 total - FY 2013.csv", nil, ['ADDRESS', 'ADDRESS_2'])
 # Merger.merge_file("undeclared surplus property by id.csv", 'APN', 'ADDRESS')
 # Merger.merge_file("Department of Building & Safety Vacant Buildings.csv", nil, ['Address', 'City'])
-Merger.merge_file("HCIDLA Owned Properties for Filming.csv", 'APN', ['Property Address', 'City', 'Zip Code'])
+# Merger.merge_file("HCIDLA Owned Properties for Filming.csv", 'APN', ['Property Address', 'City', 'Zip Code'])
 
 # Merger.update_headers
 
-# Geobuilder.build
+Geobuilder.build
 
 # Deduper.dedup_all
