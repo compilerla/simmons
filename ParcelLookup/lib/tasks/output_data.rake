@@ -59,7 +59,7 @@ namespace :data do
       not_matched.each do |(lat, lon), count|
         next if lat.nil?
         out_row = []
-        records = MasterRecord.where(address_latitude: lat, address_longitude: lon)
+        records = MasterRecord.where("address_latitude::numeric = ? AND address_longitude::numeric = ?", lat, lon)
         next if records.empty?
         out_row << records.first.apn_given
         out_row << records.first.address_given
