@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151229005552) do
+ActiveRecord::Schema.define(version: 20151230025958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20151229005552) do
     t.float  "address_latitude"
     t.float  "address_longitude"
     t.hstore "info"
+    t.json   "county_data",       default: {}, null: false
   end
 
 end

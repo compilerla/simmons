@@ -7,7 +7,7 @@ namespace :data do
   task ain_output: :environment do
     used_ids = []
     geojson_features = []
-    headers = %w(ain supplied_address address_from_apn latitude longitude source_files)
+    headers = %w(ain supplied_address address_from_apn latitude longitude source_files council_district use_type, use_type_label)
     CSV.open('../data/deduped_by_ain.csv', 'wb') do |out_csv|
       out_csv << headers
       AinShape.all.each do |shape|
@@ -18,6 +18,10 @@ namespace :data do
         out_row << shape.master_records.first.address_latitude
         out_row << shape.master_records.first.address_longitude
         out_row << shape.master_records.pluck(:file_name).join(', ')
+        out_row << shape.master_records.map(&:council_district).uniq.join(', ')
+        out_row << shape.master_records.map(&:use_type).uniq.join(', ')
+        out_row << shape.master_records.map(&:use_type_label).uniq.join(', ')
+
         used_ids << shape.master_records.pluck(:id)
         used_ids = used_ids.flatten
         # p out_row if shape.master_records.first.apn_given.empty?
@@ -48,6 +52,10 @@ namespace :data do
         out_row << records.first.address_latitude
         out_row << records.first.address_longitude
         out_row << records.pluck(:file_name)
+        out_row << records.map(&:council_district).uniq.join(', ')
+        out_row << records.map(&:use_type).uniq.join(', ')
+        out_row << records.map(&:use_type_label).uniq.join(', ')
+
         used_ids << records.pluck(:id)
         used_ids = used_ids.flatten
         # p out_row if records.first.apn_given.empty?
@@ -78,6 +86,10 @@ namespace :data do
         out_row << record.address_latitude
         out_row << record.address_longitude
         out_row << record.file_name
+        out_row << record.council_district
+        out_row << record.use_type
+        out_row << record.use_type_label
+
         # p out_row if record.apn_given.empty?
         out_csv << out_row
 
