@@ -65,6 +65,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    merc_convert (0.1.0)
     method_source (0.8.2)
     mime-types (2.99)
     mini_portile2 (2.0.0)
@@ -175,6 +176,7 @@ DEPENDENCIES
   activerecord-postgis-adapter
   byebug
   jbuilder (~> 2.0)
+  merc_convert
   pg
   pry
   rails (= 4.2.1)

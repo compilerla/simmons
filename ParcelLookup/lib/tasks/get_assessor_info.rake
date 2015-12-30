@@ -9,7 +9,7 @@ namespace :data do
         details = JSON.parse(request)['results']['ParcelDetails']
         if details.present?
           p 'saving'
-          record.info['assesorinfo'] = details
+          record.county_data = details
           record.save!
         else
           p "skipping"
