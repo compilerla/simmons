@@ -54,10 +54,59 @@ namespace :data do
         }
       end
 
-      # p "going into not matched"
-      not_matched = MasterRecord.not_yet_matched.group([:address_latitude, :address_longitude]).count
+      # APN groups
+      not_matched = MasterRecord.not_yet_matched.where.not(id: used_ids).group(:apn_given).count
+      not_matched.each do |apn, count|
+        next if apn.blank?
+        out_row = []
+        records = MasterRecord.where("apn_given = ?", apn)
+        next if records.empty?
+        out_row << records.first.apn_given
+        out_row << records.first.address_given
+        out_row << records.first.address_from_apn
+        out_row << records.first.address_latitude
+        out_row << records.first.address_longitude
+        out_row << records.pluck(:file_name).join(', ')
+        out_row << records.map(&:parcel_size).uniq.join(', ')
+        out_row << records.map(&:council_district).uniq.join(', ')
+        out_row << records.map(&:use_type).uniq.join(', ')
+        out_row << records.map(&:use_type_label).uniq.join(', ')
+        out_row << records.map(&:region).uniq.join(', ')
+        out_row << records.map(&:tax_rate_area).uniq.join(', ')
+        out_row << records.map(&:recording_date).uniq.join(', ')
+        out_row << records.map(&:assessed_value).uniq.join(', ')
+        out_row << records.map(&:land_value).uniq.join(', ')
+        out_row << records.map(&:improvement_value).uniq.join(', ')
+        out_row << records.map(&:property_boundary_description).uniq.join(', ')
+        out_row << records.map(&:first_owner_name).uniq.join(', ')
+        out_row << records.map(&:agency_name).uniq.join(', ')
+        out_row << records.map(&:general_use_type).uniq.join(', ')
+        out_row << records.map(&:specific_use_type).uniq.join(', ')
+
+        used_ids << records.pluck(:id)
+        used_ids = used_ids.flatten
+        # p out_row if records.first.apn_given.empty?
+        out_csv << out_row
+
+        if records.first.address_longitude.present?
+          geojson_features << {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [records.first.address_longitude, records.first.address_latitude]
+            },
+            "properties": {
+              "title": records.pluck(:file_name).join(', '),
+              "address": records.first.address_given,
+              "color": colorizer.colorize(records.pluck(:file_name))
+            }
+          }
+        end
+      end
+      # p "group by location"
+      not_matched = MasterRecord.not_yet_matched.where.not(id: used_ids).group([:address_latitude, :address_longitude]).count
       not_matched.each do |(lat, lon), count|
-        next if lat.nil?
+        next if lat.blank?
         out_row = []
         records = MasterRecord.where("address_latitude::numeric = ? AND address_longitude::numeric = ?", lat, lon)
         next if records.empty?
