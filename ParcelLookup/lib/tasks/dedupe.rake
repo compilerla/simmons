@@ -16,6 +16,8 @@ namespace :data do
                                         ain_shape_id: inclusion_match.id,
                                          match_method: 'point in shape')
           p "point match"
+        else
+          p "nope"
         end
       end
     end

@@ -32,9 +32,11 @@ class Colorizer
   end
 
   def colorize(lists)
-    if lists.is_a? Array
+    if lists.is_a?(Array) && lists.length > 1
       COLORS.last
     else
+      lists = lists.first if lists.is_a?(Array)
+
       unless @lists.include?(lists)
         @lists << lists
       end

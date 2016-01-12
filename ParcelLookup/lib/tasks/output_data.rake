@@ -49,9 +49,11 @@ namespace :data do
           "properties": {
             "title": shape.master_records.pluck(:file_name).join(', '),
             "APN": shape.master_records.first.apn_given,
-            "color": colorizer.colorize(shape.master_records.pluck(:file_name))
+            "fill": colorizer.colorize(shape.master_records.pluck(:file_name)),
+            "stroke": colorizer.colorize(shape.master_records.pluck(:file_name))
           }
         }
+        p colorizer.colorize(shape.master_records.pluck(:file_name))
       end
 
       # APN groups
@@ -98,7 +100,7 @@ namespace :data do
             "properties": {
               "title": records.pluck(:file_name).join(', '),
               "address": records.first.address_given,
-              "color": colorizer.colorize(records.pluck(:file_name))
+              "marker-color": colorizer.colorize(records.pluck(:file_name))
             }
           }
         end
@@ -147,7 +149,7 @@ namespace :data do
             "properties": {
               "title": records.pluck(:file_name).join(', '),
               "address": records.first.address_given,
-              "color": colorizer.colorize(records.pluck(:file_name))
+              "marker-color": colorizer.colorize(records.pluck(:file_name))
             }
           }
         end
@@ -192,7 +194,7 @@ namespace :data do
             "properties": {
               "title": record,
               "address": record.address_given,
-              "color": colorizer.colorize(record.file_name)
+              "marker-color": colorizer.colorize(record.file_name)
             }
           }
         end

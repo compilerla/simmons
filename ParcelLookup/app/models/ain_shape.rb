@@ -1,5 +1,5 @@
 class AinShape < ActiveRecord::Base
-  scope :containing_point, -> (point) { where("ain_shapes.shape && ?", point) }
+  scope :containing_point, -> (point) { where("ST_DWithin(ain_shapes.shape::geography, ?::geography, 3)", point) }
   validates_uniqueness_of :ain
   has_many :ain_shapes_master_record, dependent: :destroy, foreign_key: :ain_shape_id
   has_many :master_records, through: :ain_shapes_master_record
